@@ -1,11 +1,3 @@
----
-layout: post
-title: "Generative AI 10기 팀 프로젝트 - 주식 정보 대시보드"
-date: 2026-02-02
-categories: [Project, Team]
-tags: [python, plotly, streamlit, finance, dashboard, stock-analysis]
----
-
 # 📈 주식 정보 대시보드 팀 프로젝트
 
 ## 프로젝트 개요
