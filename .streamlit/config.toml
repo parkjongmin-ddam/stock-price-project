@@ -1,0 +1,6 @@
+[server]
+# 파일 변경 감지 시 자동으로 앱 재실행
+runOnSave = true
+
+# 파일 감시 활성화
+fileWatcherType = "auto"

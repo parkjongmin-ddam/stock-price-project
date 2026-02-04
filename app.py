@@ -55,36 +55,11 @@ if is_dark:
         [data-testid="stMetricValue"] { color: #00e676 !important; font-weight: 700 !important; }
         [data-testid="stMetricLabel"] { color: #e0e0e0 !important; }
 
-        /* 사이드바 토글 버튼 (Collapsed Control) */
-        [data-testid="stSidebarCollapsedControl"] {
-            position: fixed !important;
-            top: 15px !important;
-            left: 15px !important;
-            background-color: #262730 !important;
-            color: #ffffff !important;
-            z-index: 1000001 !important;
-        }
-
-        /* 상단 툴바 및 배포 버튼 숨기기 + 헤더 영역 공간 제거 */
+        /* 상단 툴바 및 배포 버튼만 숨기기 */
         .stDeployButton { display: none !important; }
         [data-testid="stToolbar"] { visibility: hidden !important; }
-        
-        /* 헤더 배경 투명화 및 클릭 통과 (토글 제외) */
-        header[data-testid="stHeader"] { 
-            background-color: transparent !important;
-            height: auto !important; /* 높이 제한 해제 */
-            pointer-events: none !important; /* 헤더 영역 클릭 통과 */
-        }
-        
-        /* 토글 버튼은 클릭 가능해야 함 */
-        header[data-testid="stHeader"] [data-testid="stSidebarCollapsedControl"] {
-            pointer-events: auto !important;
-        }
-        
-        /* 메인 콘텐츠 상단 여백 줄이기 (헤더 공간만큼 당기기) */
-        .block-container {
-            padding-top: 3rem !important;
-        }
+        #MainMenu { visibility: hidden !important; }
+        footer { visibility: hidden !important; }
     </style>
     """
 else:
@@ -116,35 +91,11 @@ else:
         [data-testid="stMetricValue"] { color: #111111 !important; }
         [data-testid="stMetricLabel"] { color: #666666 !important; }
         
-        /* 사이드바 토글 버튼 */
-        [data-testid="stSidebarCollapsedControl"] {
-            position: fixed !important;
-            top: 15px !important;
-            left: 15px !important;
-            background-color: #f8f9fa !important;
-            color: #31333F !important;
-            border: 1px solid #e0e0e0 !important;
-            z-index: 1000001 !important;
-        }
-
-        /* 상단 툴바 및 배포 버튼 숨기기 + 헤더 영역 공간 제거 */
+        /* 상단 툴바 및 배포 버튼만 숨기기 */
         .stDeployButton { display: none !important; }
         [data-testid="stToolbar"] { visibility: hidden !important; }
-        
-        /* 헤더 배경 투명화 및 클릭 통과 */
-        header[data-testid="stHeader"] { 
-            background-color: transparent !important; 
-            pointer-events: none !important;
-        }
-        /* 토글 버튼 클릭 복구 */
-        header[data-testid="stHeader"] [data-testid="stSidebarCollapsedControl"] { 
-            pointer-events: auto !important; 
-        }
-        
-        /* 메인 콘텐츠 상단 여백 줄이기 */
-        .block-container {
-            padding-top: 3rem !important;
-        }
+        #MainMenu { visibility: hidden !important; }
+        footer { visibility: hidden !important; }
     </style>
     """
 st.markdown(css, unsafe_allow_html=True)
