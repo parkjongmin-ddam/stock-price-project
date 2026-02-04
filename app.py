@@ -30,72 +30,95 @@ plotly_template = "plotly_dark" if is_dark else "plotly_white"
 if is_dark:
     css = """
     <style>
-        /* 기본 폰트 색상 및 배경 */
+        /* 전체 배경 및 폰트 */
         .stApp { 
             background-color: #0e1117; 
             color: #ffffff; 
         }
         
-        /* 사이드바 스타일링 */
+        /* 사이드바 배경 및 텍스트 */
         section[data-testid="stSidebar"] { 
             background-color: #262730; 
         }
         
-        /* 사이드바 내부 텍스트 색상 강제 지정 */
         section[data-testid="stSidebar"] * {
             color: #ffffff !important;
         }
 
-        /* 헤더 스타일링 */
+        /* 헤더 배경 */
         header[data-testid="stHeader"] { 
             background-color: #0e1117; 
         }
 
-        /* Metric 위젯 스타일 */
-        [data-testid="stMetricValue"] { color: #00e676 !important; font-weight: 700 !important; }
-        [data-testid="stMetricLabel"] { color: #e0e0e0 !important; }
+        /* 제목 텍스트 */
+        h1, h2, h3, h4, h5, h6 { 
+            color: #ffffff !important; 
+        }
 
-        /* 상단 툴바 및 배포 버튼만 숨기기 */
+        /* Metric 위젯 */
+        [data-testid="stMetricValue"] { 
+            color: #00e676 !important; 
+            font-weight: 700 !important; 
+        }
+        [data-testid="stMetricLabel"] { 
+            color: #e0e0e0 !important; 
+        }
+
+        /* 사이드바 접기 버튼 숨기기 (고정) */
+        [data-testid="stSidebarCollapsedControl"] { 
+            display: none !important; 
+        }
+
+        /* Deploy 버튼과 Toolbar 숨기기 */
         .stDeployButton { display: none !important; }
         [data-testid="stToolbar"] { visibility: hidden !important; }
-        #MainMenu { visibility: hidden !important; }
-        footer { visibility: hidden !important; }
     </style>
     """
 else:
     css = """
     <style>
-        /* Light Mode 기본 설정 */
+        /* 전체 배경 및 폰트 */
         .stApp { 
             background-color: #ffffff; 
             color: #333333; 
         }
         
-        /* 사이드바 스타일링 */
+        /* 사이드바 배경 및 텍스트 */
         section[data-testid="stSidebar"] { 
             background-color: #f8f9fa; 
             border-right: 1px solid #e0e0e0;
         }
 
-        /* 사이드바 내부 텍스트 색상 */
         section[data-testid="stSidebar"] * {
             color: #31333F !important;
         }
 
-        /* 헤더 스타일링 */
+        /* 헤더 배경 */
         header[data-testid="stHeader"] { 
             background-color: #ffffff; 
         }
+
+        /* 제목 텍스트 */
+        h1, h2, h3, h4, h5, h6 { 
+            color: #111111 !important; 
+        }
         
-        /* Metric 위젯 스타일 */
-        [data-testid="stMetricValue"] { color: #111111 !important; }
-        [data-testid="stMetricLabel"] { color: #666666 !important; }
+        /* Metric 위젯 */
+        [data-testid="stMetricValue"] { 
+            color: #111111 !important; 
+        }
+        [data-testid="stMetricLabel"] { 
+            color: #666666 !important; 
+        }
+
+        /* 사이드바 접기 버튼 숨기기 (고정) */
+        [data-testid="stSidebarCollapsedControl"] { 
+            display: none !important; 
+        }
         
-        /* 상단 툴바 및 배포 버튼만 숨기기 */
+        /* Deploy 버튼과 Toolbar 숨기기 */
         .stDeployButton { display: none !important; }
         [data-testid="stToolbar"] { visibility: hidden !important; }
-        #MainMenu { visibility: hidden !important; }
-        footer { visibility: hidden !important; }
     </style>
     """
 st.markdown(css, unsafe_allow_html=True)
