@@ -60,10 +60,9 @@ if is_dark:
         /* 사이드바 토글 버튼 (Collapsed Control) 스타일링 - Dark Mode */
         [data-testid="stSidebarCollapsedControl"] {
             background-color: #262730 !important;
-            border-radius: 5px !important;
             color: #ffffff !important;
             display: block !important;
-            z-index: 100000 !important;
+            z-index: 999999 !important;
         }
         [data-testid="stSidebarCollapsedControl"] svg {
             fill: #ffffff !important;
@@ -130,11 +129,10 @@ else:
         /* 사이드바 토글 버튼 (Collapsed Control) 스타일링 - Light Mode */
         [data-testid="stSidebarCollapsedControl"] {
             background-color: #f8f9fa !important;
-            border-radius: 5px !important;
             border: 1px solid #e0e0e0 !important;
             color: #31333F !important;
             display: block !important;
-            z-index: 100000 !important;
+            z-index: 999999 !important;
         }
         [data-testid="stSidebarCollapsedControl"] svg {
             fill: #31333F !important;
@@ -154,6 +152,14 @@ st.markdown(css, unsafe_allow_html=True)
 # ==========================================
 # 2. 데이터 로드 및 캐싱 (Data Loading)
 # ==========================================
+
+# (NEW) 쿼리 파라미터 처리 (Redirection Logic)
+# 사용자가 카드 클릭 시 ?demo=true&section=... 파라미터로 재진입
+params = st.query_params
+if "demo" in params and params["demo"] == "true":
+    if "choice" not in st.session_state or st.session_state["choice"] == "데이터를 선택해주세요":
+        st.session_state["choice"] = "Samsung (삼성전자)"
+
 @st.cache_data
 def get_stock_data(ticker, start="2025-01-01", end="2025-12-31"):
     try:
@@ -386,7 +392,12 @@ def plot_saltlux_report(df, name="Saltlux", template="plotly_white"):
 
 # 종목 선택
 menu = ["데이터를 선택해주세요", "Samsung (삼성전자)", "SK Hynix (SK하이닉스)", "Kakao (카카오)", "Saltlux (솔트룩스)", "Hancom (한글과컴퓨터)"]
-choice = st.sidebar.selectbox("종목 선택 (Select Stock)", menu)
+
+# (NEW) session_state와 연동하여 선택 상태 유지
+if "choice" not in st.session_state:
+    st.session_state["choice"] = menu[0]
+
+choice = st.sidebar.selectbox("종목 선택 (Select Stock)", menu, key="choice")
 
 # 날짜 선택
 col1, col2 = st.sidebar.columns(2)
@@ -439,11 +450,17 @@ if choice == "데이터를 선택해주세요":
             height: 100%;
             box-shadow: 0 4px 6px {shadow_c};
             transition: transform 0.2s;
+            cursor: pointer; /* 클릭 가능 표시 */
+            position: relative;
         }}
         .feature-card:hover {{
             transform: translateY(-5px);
             border-color: #2196f3;
         }}
+        /* 링크 스타일 제거 */
+        a {{ text-decoration: none; color: inherit; }}
+        a:hover {{ text-decoration: none; color: inherit; }}
+        
         .card-icon {{
             font-size: 2rem;
             margin-bottom: 10px;
@@ -474,29 +491,35 @@ if choice == "데이터를 선택해주세요":
 
     with col1:
         st.markdown(f"""
-        <div class="feature-card">
-            <div class="card-icon">📊</div>
-            <div class="card-title">심층 차트 분석</div>
-            <div class="card-desc">캔들스틱 차트, 이동평균선(MA), 거래량 분석을 통해 주가의 흐름을 한눈에 파악할 수 있습니다.</div>
-        </div>
+        <a href="?demo=true&section=chart" target="_self">
+            <div class="feature-card">
+                <div class="card-icon">📊</div>
+                <div class="card-title">심층 차트 분석</div>
+                <div class="card-desc">캔들스틱 차트, 이동평균선(MA), 거래량 분석을 통해 주가의 흐름을 한눈에 파악할 수 있습니다. (클릭 시 체험)</div>
+            </div>
+        </a>
         """, unsafe_allow_html=True)
 
     with col2:
         st.markdown(f"""
-        <div class="feature-card">
-            <div class="card-icon">📉</div>
-            <div class="card-title">리스크 관리 (Drawdown)</div>
-            <div class="card-desc">고점 대비 하락폭(Drawdown)을 시각화하여 투자 리스크를 직관적으로 분석합니다.</div>
-        </div>
+        <a href="?demo=true&section=drawdown" target="_self">
+            <div class="feature-card">
+                <div class="card-icon">📉</div>
+                <div class="card-title">리스크 관리 (Drawdown)</div>
+                <div class="card-desc">고점 대비 하락폭(Drawdown)을 시각화하여 투자 리스크를 직관적으로 분석합니다. (클릭 시 체험)</div>
+            </div>
+        </a>
         """, unsafe_allow_html=True)
 
     with col3:
         st.markdown(f"""
-        <div class="feature-card">
-            <div class="card-icon">📑</div>
-            <div class="card-title">핵심 통계 요약</div>
-            <div class="card-desc">수익률, 최대 낙폭(MDD), 변동성 등 투자의사 결정에 필요한 핵심 지표를 제공합니다.</div>
-        </div>
+        <a href="?demo=true&section=stats" target="_self">
+            <div class="feature-card">
+                <div class="card-icon">📑</div>
+                <div class="card-title">핵심 통계 요약</div>
+                <div class="card-desc">수익률, 최대 낙폭(MDD), 변동성 등 투자의사 결정에 필요한 핵심 지표를 제공합니다. (클릭 시 체험)</div>
+            </div>
+        </a>
         """, unsafe_allow_html=True)
 
     st.markdown("---")
@@ -561,6 +584,9 @@ else:
         st.markdown("---")
 
         # 차트 그리기 (Template 적용)
+        # 앵커 태그 추가 (스크롤 타겟)
+        st.markdown('<div id="chart"></div>', unsafe_allow_html=True)
+        
         if selected["type"] == "standard":
             fig = plot_standard_dashboard(df, name, ticker, plotly_template)
             st.plotly_chart(fig, use_container_width=True)
@@ -573,6 +599,23 @@ else:
             fig = plot_saltlux_report(df, name, plotly_template)
             st.plotly_chart(fig, use_container_width=True)
         
+        # Drawdown 및 Stats 섹션 앵커 (대략적인 위치)
+        st.markdown('<div id="drawdown"></div>', unsafe_allow_html=True)
+        st.markdown('<div id="stats"></div>', unsafe_allow_html=True)
+
         # 데이터 테이블 표시 (옵션)
         with st.expander("데이터 원본 보기 (Raw Data)"):
             st.dataframe(df.style.format("{:,.0f}"))
+
+        # 자동 스크롤 (JS Injection)
+        if "section" in params:
+            target_section = params["section"]
+            # JS로 스크롤 이동
+            st.markdown(f"""
+            <script>
+                var element = document.getElementById("{target_section}");
+                if(element) {{
+                    element.scrollIntoView({{behavior: "smooth"}});
+                }}
+            </script>
+            """, unsafe_allow_html=True)
