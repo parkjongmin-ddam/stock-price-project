@@ -52,6 +52,13 @@ if is_dark:
         div[data-testid="stExpander"] { background-color: #262730; color: white; }
         .stMarkdown { color: #ffffff; }
 
+        /* 사이드바 토글 버튼 (Collapsed Control) 스타일링 */
+        [data-testid="stSidebarCollapsedControl"] {
+            color: #ffffff !important;
+            display: block !important;
+            z-index: 10000 !important;
+        }
+
         /* 상단 툴바/버튼/푸터 숨기기 */
         .stDeployButton { display: none; }
         [data-testid="stToolbar"] { visibility: hidden; }
@@ -62,10 +69,58 @@ if is_dark:
 else:
     css = """
     <style>
-        .stApp { background-color: #ffffff; color: #000000; }
-        section[data-testid="stSidebar"] { background-color: #f0f2f6; }
+        /* [Light Mode] 전체 배경 및 폰트 */
+        .stApp { background-color: #ffffff; color: #333333; }
+        
+        /* 사이드바 배경 및 텍스트 강제 설정 */
+        section[data-testid="stSidebar"] { 
+            background-color: #f8f9fa; 
+            border-right: 1px solid #e0e0e0;
+        }
+        
+        /* 사이드바 내 모든 텍스트 요소 색상 강제 (시스템 테마 간섭 방지) */
+        section[data-testid="stSidebar"] h1,
+        section[data-testid="stSidebar"] h2,
+        section[data-testid="stSidebar"] h3,
+        section[data-testid="stSidebar"] p, 
+        section[data-testid="stSidebar"] span, 
+        section[data-testid="stSidebar"] label, 
+        section[data-testid="stSidebar"] div[data-testid="stMarkdownContainer"] p,
+        section[data-testid="stSidebar"] div[data-testid="stMarkdownContainer"] li { 
+            color: #31333F !important; 
+        }
+
+        /* 헤더 배경 */
         header[data-testid="stHeader"] { background-color: #ffffff; }
-        h1, h2, h3, h4, h5, h6 { color: #000000 !important; }
+        
+        /* 제목 텍스트 색상 */
+        h1, h2, h3, h4, h5, h6 { color: #111111 !important; }
+        
+        /* 마크다운 및 일반 텍스트 */
+        .stMarkdown p, .stMarkdown li { color: #333333 !important; }
+        
+        /* Divider (가로선) 색상 */
+        hr { border-color: #e0e0e0 !important; }
+
+        /* Metric 위젯 텍스트 */
+        [data-testid="stMetricValue"] { color: #111111 !important; }
+        [data-testid="stMetricLabel"] { color: #666666 !important; }
+        
+        /* Expander (Light Mode) */
+        div[data-testid="stExpander"] { 
+            background-color: #ffffff; 
+            border: 1px solid #e0e0e0; 
+            color: #333333;
+        }
+        div[data-testid="stExpander"] p { color: #333333 !important; }
+        div[data-testid="stExpander"] summary { color: #31333F !important; }
+
+        /* 사이드바 토글 버튼 (Collapsed Control) 스타일링 */
+        [data-testid="stSidebarCollapsedControl"] {
+            color: #31333F !important;
+            display: block !important;
+            z-index: 10000 !important;
+        }
 
         /* 상단 툴바/버튼/푸터 숨기기 */
         .stDeployButton { display: none; }
