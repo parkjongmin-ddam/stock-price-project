@@ -4,7 +4,7 @@
 
 **주제**: 주식 정보 대시보드 개발  
 **기간**: 2025.01.01 ~ 2025.12.31 (데이터 분석 기간)  
-**팀원**: Generative AI 10기  
+**팀원**: Generative AI 10기(박종민,김정현,이복록,서경호,박지인,이진규)  
 **기술 스택**: Python, Plotly, Streamlit, FinanceDataReader, Pandas
 
 ---
