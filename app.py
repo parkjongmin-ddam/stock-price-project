@@ -36,7 +36,7 @@ if is_dark:
         
         /* 사이드바 배경 및 텍스트 (명확하게 톤업) */
         section[data-testid="stSidebar"] { background-color: #262730; }
-        section[data-testid="stSidebar"] .block-container { padding-top: 3rem !important; }
+        section[data-testid="stSidebar"] .block-container { padding-top: 6rem !important; }
         
         section[data-testid="stSidebar"] p, 
         section[data-testid="stSidebar"] span, 
@@ -92,7 +92,7 @@ else:
             background-color: #f8f9fa; 
             border-right: 1px solid #e0e0e0;
         }
-        section[data-testid="stSidebar"] .block-container { padding-top: 3rem !important; }
+        section[data-testid="stSidebar"] .block-container { padding-top: 6rem !important; }
         
         /* 사이드바 내 모든 텍스트 요소 색상 강제 (시스템 테마 간섭 방지) */
         section[data-testid="stSidebar"] h1,
@@ -406,11 +406,12 @@ def plot_saltlux_report(df, name="Saltlux", template="plotly_white"):
 # ... 종목 선택 및 Date Picker 로직 ...
 
 # 종목 선택
-menu = ["데이터를 선택해주세요", "Samsung (삼성전자)", "SK Hynix (SK하이닉스)", "Kakao (카카오)", "Saltlux (솔트룩스)", "Hancom (한글과컴퓨터)"]
+menu = ["데이터를 선택해주세요", "Samsung (삼성전자)", "SK Hynix (SK하이닉스)", "Kakao (카카오)", "Saltlux (솔트룩스)", "Hancom (한글과컴퓨터)", "직접 코드 입력 (Direct Input)"]
 
 # (NEW) session_state와 연동하여 선택 상태 유지
 if "choice" not in st.session_state:
     st.session_state["choice"] = menu[0]
+
 
 # 사이드바에서 선택 변경 시 session_state 업데이트
 def update_choice():
@@ -616,7 +617,14 @@ else:
         "Hancom (한글과컴퓨터)": {"code": "030520", "type": "standard", "name": "Hancom"},
     }
 
-    selected = stock_map[choice]
+    # 직접 입력 로직
+    if choice == "직접 코드 입력 (Direct Input)":
+        ticker_input = st.sidebar.text_input("종목 코드 입력 (예: 005930)", value="005930")
+        name_input = st.sidebar.text_input("종목명 (Display Name)", value="Custom Stock")
+        selected = {"code": ticker_input, "type": "standard", "name": name_input}
+    else:
+        selected = stock_map[choice]
+
     ticker = selected["code"]
     name = selected["name"]
 
