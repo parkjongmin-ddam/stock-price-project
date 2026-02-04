@@ -12,7 +12,7 @@ st.set_page_config(
     page_title="주가 차트 대시보드",
     page_icon="📈",
     layout="wide",
-    initial_sidebar_state="expanded"
+    initial_sidebar_state="auto"
 )
 
 # ==========================================
