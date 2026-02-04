@@ -4,6 +4,7 @@ import pandas as pd
 import numpy as np
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
+import urllib.parse
 
 # ==========================================
 # 1. 페이지 설정 (Page Configuration)
@@ -154,13 +155,17 @@ st.markdown(css, unsafe_allow_html=True)
 # ==========================================
 
 # (NEW) 쿼리 파라미터 처리 (Redirection Logic)
-# 사용자가 카드 클릭 시 ?demo=true&section=... 파라미터로 재진입
+# 사용자가 카드 클릭 시 ?demo=true&section=...&stock=... 파라미터로 재진입
 params = st.query_params
 if "demo" in params and params["demo"] == "true":
-    # 이미 선택된 종목이 '데이터를 선택해주세요'인 경우에만 기본 종목(삼성)으로 설정
-    if "choice" not in st.session_state or st.session_state["choice"] == "데이터를 선택해주세요":
+    # URL에 stock 파라미터가 있으면 그것을 최우선으로 적용
+    target_stock = params.get("stock", None)
+    if target_stock:
+        st.session_state["choice"] = target_stock
+    # 없으면 기본값 삼성전자
+    elif "choice" not in st.session_state or st.session_state["choice"] == "데이터를 선택해주세요":
         st.session_state["choice"] = "Samsung (삼성전자)"
-    # 이미 다른 종목을 선택한 상태라면 그 종목 유지 (User Feedback 반영)
+
 
 
 @st.cache_data
@@ -519,21 +524,20 @@ if choice == "데이터를 선택해주세요":
     """, unsafe_allow_html=True)
 
     # (NEW) 메인 화면에서도 종목 선택 가능하게 추가 (User Feedback 반영)
-    st.markdown("##### 👇 분석할 종목을 바로 선택해보세요")
+    st.markdown("##### 👇 분석할 종목을 선택하세요 (카드 클릭 적용)")
     
-    # 사이드바와 연동을 위해 key='main_choice' 사용하되, 선택 시 sidebar 값을 업데이트
-    def update_sidebar_choice():
-        # 메인 선택 값으로 choice 업데이트
-        st.session_state["choice"] = st.session_state["main_choice"]
-        # 사이드바 위젯의 상태(sb_choice)도 동기화해야 다음 런타임에 초기화되지 않음 (중요)
-        st.session_state["sb_choice"] = st.session_state["main_choice"]
-
     # '데이터를 선택해주세요' 제외한 리스트
-    stock_options = menu[1:] 
+    stock_options = menu[1:]
     
-    # 여기서 selectbox를 그리면 사용자가 값을 바꿀 때 update_sidebar_choice 호출 -> session_state 업데이트 -> Rerun
-    # Rerun되면 맨 위에서 choice 값을 session_state에서 읽어옴 -> if choice != "데이터..." 분기로 이동 -> 대시보드 표시
-    st.selectbox("빠른 종목 선택", stock_options, key="main_choice", index=None, placeholder="종목을 선택하면 상세 분석 화면으로 이동합니다...", on_change=update_sidebar_choice)
+    # Landing Page용 선택값 관리 (Default: 삼성전자)
+    if "landing_choice" not in st.session_state:
+        st.session_state["landing_choice"] = stock_options[0]
+
+    # Selectbox: 값이 변경되면 session_state["landing_choice"] 업데이트 후 Rerun -> 아래 카드 링크에 반영됨
+    st.selectbox("대상 종목 선택", stock_options, key="landing_choice")
+    
+    # URL 인코딩 (한글 및 괄호 처리)
+    encoded_stock = urllib.parse.quote(st.session_state["landing_choice"])
 
     st.divider()
 
@@ -544,33 +548,33 @@ if choice == "데이터를 선택해주세요":
 
     with col1:
         st.markdown(f"""
-        <a href="?demo=true&section=chart" target="_self">
+        <a href="?demo=true&section=chart&stock={encoded_stock}" target="_self">
             <div class="feature-card">
                 <div class="card-icon">📊</div>
                 <div class="card-title">심층 차트 분석</div>
-                <div class="card-desc">캔들스틱 차트, 이동평균선(MA), 거래량 분석을 통해 주가의 흐름을 한눈에 파악할 수 있습니다. (클릭 시 체험)</div>
+                <div class="card-desc">캔들스틱 차트, 이동평균선(MA), 거래량 분석을 통해 주가의 흐름을 한눈에 파악할 수 있습니다. (클릭 시 이동)</div>
             </div>
         </a>
         """, unsafe_allow_html=True)
 
     with col2:
         st.markdown(f"""
-        <a href="?demo=true&section=drawdown" target="_self">
+        <a href="?demo=true&section=drawdown&stock={encoded_stock}" target="_self">
             <div class="feature-card">
                 <div class="card-icon">📉</div>
                 <div class="card-title">리스크 관리 (Drawdown)</div>
-                <div class="card-desc">고점 대비 하락폭(Drawdown)을 시각화하여 투자 리스크를 직관적으로 분석합니다. (클릭 시 체험)</div>
+                <div class="card-desc">고점 대비 하락폭(Drawdown)을 시각화하여 투자 리스크를 직관적으로 분석합니다. (클릭 시 이동)</div>
             </div>
         </a>
         """, unsafe_allow_html=True)
 
     with col3:
         st.markdown(f"""
-        <a href="?demo=true&section=stats" target="_self">
+        <a href="?demo=true&section=stats&stock={encoded_stock}" target="_self">
             <div class="feature-card">
                 <div class="card-icon">📑</div>
                 <div class="card-title">핵심 통계 요약</div>
-                <div class="card-desc">수익률, 최대 낙폭(MDD), 변동성 등 투자의사 결정에 필요한 핵심 지표를 제공합니다. (클릭 시 체험)</div>
+                <div class="card-desc">수익률, 최대 낙폭(MDD), 변동성 등 투자의사 결정에 필요한 핵심 지표를 제공합니다. (클릭 시 이동)</div>
             </div>
         </a>
         """, unsafe_allow_html=True)
