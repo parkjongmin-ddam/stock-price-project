@@ -4,3 +4,7 @@ runOnSave = true
 
 # 파일 감시 활성화
 fileWatcherType = "auto"
+
+[client]
+# 사이드바 네비게이션 컨트롤 숨기기
+showSidebarNavigation = false

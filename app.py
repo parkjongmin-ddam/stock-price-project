@@ -41,7 +41,17 @@ if is_dark:
             background-color: #262730; 
         }
         
-        section[data-testid="stSidebar"] * {
+        /* 사이드바 제목과 라벨 */
+        section[data-testid="stSidebar"] h1,
+        section[data-testid="stSidebar"] h2,
+        section[data-testid="stSidebar"] h3,
+        section[data-testid="stSidebar"] label,
+        section[data-testid="stSidebar"] p {
+            color: #ffffff !important;
+        }
+        
+        /* 사이드바 라디오 버튼 텍스트 */
+        section[data-testid="stSidebar"] [data-testid="stRadio"] label {
             color: #ffffff !important;
         }
 
@@ -96,7 +106,17 @@ else:
             border-right: 1px solid #e0e0e0;
         }
 
-        section[data-testid="stSidebar"] * {
+        /* 사이드바 제목과 라벨 */
+        section[data-testid="stSidebar"] h1,
+        section[data-testid="stSidebar"] h2,
+        section[data-testid="stSidebar"] h3,
+        section[data-testid="stSidebar"] label,
+        section[data-testid="stSidebar"] p {
+            color: #31333F !important;
+        }
+        
+        /* 사이드바 라디오 버튼 텍스트 */
+        section[data-testid="stSidebar"] [data-testid="stRadio"] label {
             color: #31333F !important;
         }
 
