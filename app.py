@@ -4,7 +4,6 @@ import pandas as pd
 import numpy as np
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
-import urllib.parse
 
 # ==========================================
 # 1. 페이지 설정 (Page Configuration)
@@ -36,16 +35,12 @@ if is_dark:
         
         /* 사이드바 배경 및 텍스트 (명확하게 톤업) */
         section[data-testid="stSidebar"] { background-color: #262730; }
-        section[data-testid="stSidebar"] .block-container { padding-top: 6rem !important; }
-        
         section[data-testid="stSidebar"] p, 
         section[data-testid="stSidebar"] span, 
         section[data-testid="stSidebar"] label, 
         section[data-testid="stSidebar"] div[data-testid="stMarkdownContainer"] p { 
             color: #ffffff !important; 
         }
-        /* 라디오 버튼 텍스트 강제 적용 */
-        div[data-testid="stRadio"] label { color: #ffffff !important; }
         
         /* 상단 헤더 (흰색 띠 제거) - 가장 중요 */
         header[data-testid="stHeader"] { background-color: #0e1117; }
@@ -65,6 +60,7 @@ if is_dark:
         /* 사이드바 토글 버튼 (Collapsed Control) 스타일링 - Dark Mode */
         [data-testid="stSidebarCollapsedControl"] {
             background-color: #262730 !important;
+            border-radius: 5px !important;
             color: #ffffff !important;
             display: block !important;
             z-index: 100000 !important;
@@ -92,7 +88,6 @@ else:
             background-color: #f8f9fa; 
             border-right: 1px solid #e0e0e0;
         }
-        section[data-testid="stSidebar"] .block-container { padding-top: 6rem !important; }
         
         /* 사이드바 내 모든 텍스트 요소 색상 강제 (시스템 테마 간섭 방지) */
         section[data-testid="stSidebar"] h1,
@@ -105,8 +100,6 @@ else:
         section[data-testid="stSidebar"] div[data-testid="stMarkdownContainer"] li { 
             color: #31333F !important; 
         }
-        /* 라디오 버튼 텍스트 강제 적용 (Light) */
-        div[data-testid="stRadio"] label { color: #31333F !important; }
 
         /* 헤더 배경 */
         header[data-testid="stHeader"] { background-color: #ffffff; }
@@ -137,6 +130,7 @@ else:
         /* 사이드바 토글 버튼 (Collapsed Control) 스타일링 - Light Mode */
         [data-testid="stSidebarCollapsedControl"] {
             background-color: #f8f9fa !important;
+            border-radius: 5px !important;
             border: 1px solid #e0e0e0 !important;
             color: #31333F !important;
             display: block !important;
@@ -160,21 +154,6 @@ st.markdown(css, unsafe_allow_html=True)
 # ==========================================
 # 2. 데이터 로드 및 캐싱 (Data Loading)
 # ==========================================
-
-# (NEW) 쿼리 파라미터 처리 (Redirection Logic)
-# 사용자가 카드 클릭 시 ?demo=true&section=...&stock=... 파라미터로 재진입
-params = st.query_params
-if "demo" in params and params["demo"] == "true":
-    # URL에 stock 파라미터가 있으면 그것을 최우선으로 적용
-    target_stock = params.get("stock", None)
-    if target_stock:
-        st.session_state["choice"] = target_stock
-    # 없으면 기본값 삼성전자
-    elif "choice" not in st.session_state or st.session_state["choice"] == "데이터를 선택해주세요":
-        st.session_state["choice"] = "Samsung (삼성전자)"
-
-
-
 @st.cache_data
 def get_stock_data(ticker, start="2025-01-01", end="2025-12-31"):
     try:
@@ -407,46 +386,7 @@ def plot_saltlux_report(df, name="Saltlux", template="plotly_white"):
 
 # 종목 선택
 menu = ["데이터를 선택해주세요", "Samsung (삼성전자)", "SK Hynix (SK하이닉스)", "Kakao (카카오)", "Saltlux (솔트룩스)", "Hancom (한글과컴퓨터)"]
-
-# (NEW) session_state와 연동하여 선택 상태 유지
-if "choice" not in st.session_state:
-    st.session_state["choice"] = menu[0]
-
-
-# 사이드바에서 선택 변경 시 session_state 업데이트
-def update_choice():
-    # 사이드바에서 선택된 값을 session_state의 choice에 반영
-    # st.session_state.choice는 selectbox의 key="sb_choice"값으로 관리 추천
-    pass
-
-# Tip: selectbox에 key를 부여하면 자동으로 session_state에 저장됨
-# 하지만 여기서는 choice 변수를 직접 제어하기 위해 key를 분리하거나 로직 조정
-# 간편함을 위해 바로 st.sidebar.selectbox 사용하되 index를 활용
-
-# 현재 상태에 맞는 index 찾기
-try:
-    current_index = menu.index(st.session_state["choice"])
-except:
-    current_index = 0
-
-choice = st.sidebar.selectbox(
-    "종목 선택 (Select Stock)", 
-    menu, 
-    index=current_index,
-    key="sb_choice"
-)
-
-# 선택된 값이 변경되었으면 메인 choice 변수 업데이트
-if st.session_state["choice"] != choice:
-    st.session_state["choice"] = choice
-    st.rerun()
-
-# 🏠 홈으로 돌아가기 버튼 (사이드바)
-if choice != "데이터를 선택해주세요":
-    if st.sidebar.button("🏠 홈으로 돌아가기 (Home)", use_container_width=True):
-        st.session_state["choice"] = "데이터를 선택해주세요"
-        st.rerun()
-
+choice = st.sidebar.selectbox("종목 선택 (Select Stock)", menu)
 
 # 날짜 선택
 col1, col2 = st.sidebar.columns(2)
@@ -499,17 +439,11 @@ if choice == "데이터를 선택해주세요":
             height: 100%;
             box-shadow: 0 4px 6px {shadow_c};
             transition: transform 0.2s;
-            cursor: pointer; /* 클릭 가능 표시 */
-            position: relative;
         }}
         .feature-card:hover {{
             transform: translateY(-5px);
             border-color: #2196f3;
         }}
-        /* 링크 스타일 제거 */
-        a {{ text-decoration: none; color: inherit; }}
-        a:hover {{ text-decoration: none; color: inherit; }}
-        
         .card-icon {{
             font-size: 2rem;
             margin-bottom: 10px;
@@ -531,22 +465,6 @@ if choice == "데이터를 선택해주세요":
     <div class="hero-subtitle">데이터 기반의 스마트한 투자 분석을 시작하세요</div>
     """, unsafe_allow_html=True)
 
-    # (NEW) 메인 화면에서도 종목 선택 가능하게 추가 (User Feedback 반영)
-    st.markdown("##### 👇 분석할 종목을 선택하세요 (카드 클릭 적용)")
-    
-    # '데이터를 선택해주세요' 제외한 리스트
-    stock_options = menu[1:]
-    
-    # Landing Page용 선택값 관리 (Default: 삼성전자)
-    if "landing_choice" not in st.session_state:
-        st.session_state["landing_choice"] = stock_options[0]
-
-    # Selectbox: 값이 변경되면 session_state["landing_choice"] 업데이트 후 Rerun -> 아래 카드 링크에 반영됨
-    st.selectbox("대상 종목 선택", stock_options, key="landing_choice")
-    
-    # URL 인코딩 (한글 및 괄호 처리)
-    encoded_stock = urllib.parse.quote(st.session_state["landing_choice"])
-
     st.divider()
 
     # 주요 기능 소개 (HTML/CSS 커스텀 카드)
@@ -556,35 +474,29 @@ if choice == "데이터를 선택해주세요":
 
     with col1:
         st.markdown(f"""
-        <a href="?demo=true&section=chart&stock={encoded_stock}" target="_self">
-            <div class="feature-card">
-                <div class="card-icon">📊</div>
-                <div class="card-title">심층 차트 분석</div>
-                <div class="card-desc">캔들스틱 차트, 이동평균선(MA), 거래량 분석을 통해 주가의 흐름을 한눈에 파악할 수 있습니다. (클릭 시 이동)</div>
-            </div>
-        </a>
+        <div class="feature-card">
+            <div class="card-icon">📊</div>
+            <div class="card-title">심층 차트 분석</div>
+            <div class="card-desc">캔들스틱 차트, 이동평균선(MA), 거래량 분석을 통해 주가의 흐름을 한눈에 파악할 수 있습니다.</div>
+        </div>
         """, unsafe_allow_html=True)
 
     with col2:
         st.markdown(f"""
-        <a href="?demo=true&section=drawdown&stock={encoded_stock}" target="_self">
-            <div class="feature-card">
-                <div class="card-icon">📉</div>
-                <div class="card-title">리스크 관리 (Drawdown)</div>
-                <div class="card-desc">고점 대비 하락폭(Drawdown)을 시각화하여 투자 리스크를 직관적으로 분석합니다. (클릭 시 이동)</div>
-            </div>
-        </a>
+        <div class="feature-card">
+            <div class="card-icon">📉</div>
+            <div class="card-title">리스크 관리 (Drawdown)</div>
+            <div class="card-desc">고점 대비 하락폭(Drawdown)을 시각화하여 투자 리스크를 직관적으로 분석합니다.</div>
+        </div>
         """, unsafe_allow_html=True)
 
     with col3:
         st.markdown(f"""
-        <a href="?demo=true&section=stats&stock={encoded_stock}" target="_self">
-            <div class="feature-card">
-                <div class="card-icon">📑</div>
-                <div class="card-title">핵심 통계 요약</div>
-                <div class="card-desc">수익률, 최대 낙폭(MDD), 변동성 등 투자의사 결정에 필요한 핵심 지표를 제공합니다. (클릭 시 이동)</div>
-            </div>
-        </a>
+        <div class="feature-card">
+            <div class="card-icon">📑</div>
+            <div class="card-title">핵심 통계 요약</div>
+            <div class="card-desc">수익률, 최대 낙폭(MDD), 변동성 등 투자의사 결정에 필요한 핵심 지표를 제공합니다.</div>
+        </div>
         """, unsafe_allow_html=True)
 
     st.markdown("---")
@@ -595,8 +507,8 @@ if choice == "데이터를 선택해주세요":
     with col_guide:
         st.subheader("🚀 시작하는 방법")
         st.markdown("""
-        1. **상단의 '빠른 종목 선택'** 또는 **좌측 사이드바**를 이용하세요.
-        2. 분석하고 싶은 **기업을 선택**하면 즉시 대시보드로 이동합니다.
+        1. **좌측 사이드바**를 확인해주세요.
+        2. **'종목 선택'** 메뉴를 클릭하여 분석하고 싶은 기업을 선택하세요.
            - *지원 종목: 삼성전자, SK하이닉스, 카카오, 솔트룩스, 한글과컴퓨터*
         3. 날짜를 변경하여 **원하는 기간**의 데이터를 조회해보세요.
         """)
@@ -618,7 +530,6 @@ else:
     }
 
     selected = stock_map[choice]
-
     ticker = selected["code"]
     name = selected["name"]
 
@@ -650,9 +561,6 @@ else:
         st.markdown("---")
 
         # 차트 그리기 (Template 적용)
-        # 앵커 태그 추가 (스크롤 타겟)
-        st.markdown('<div id="chart"></div>', unsafe_allow_html=True)
-        
         if selected["type"] == "standard":
             fig = plot_standard_dashboard(df, name, ticker, plotly_template)
             st.plotly_chart(fig, use_container_width=True)
@@ -665,23 +573,6 @@ else:
             fig = plot_saltlux_report(df, name, plotly_template)
             st.plotly_chart(fig, use_container_width=True)
         
-        # Drawdown 및 Stats 섹션 앵커 (대략적인 위치)
-        st.markdown('<div id="drawdown"></div>', unsafe_allow_html=True)
-        st.markdown('<div id="stats"></div>', unsafe_allow_html=True)
-
         # 데이터 테이블 표시 (옵션)
         with st.expander("데이터 원본 보기 (Raw Data)"):
             st.dataframe(df.style.format("{:,.0f}"))
-
-        # 자동 스크롤 (JS Injection)
-        if "section" in params:
-            target_section = params["section"]
-            # JS로 스크롤 이동
-            st.markdown(f"""
-            <script>
-                var element = document.getElementById("{target_section}");
-                if(element) {{
-                    element.scrollIntoView({{behavior: "smooth"}});
-                }}
-            </script>
-            """, unsafe_allow_html=True)
