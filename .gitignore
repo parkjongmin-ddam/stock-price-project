@@ -16,5 +16,5 @@ __pycache__/
 .DS_Store
 Thumbs.db
 
-# Large HTML files (optional - remove if you want to commit the dashboard)
-# *.html
+# Backup
+backup/
