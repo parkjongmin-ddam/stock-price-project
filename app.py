@@ -59,10 +59,15 @@ if is_dark:
 
         /* 사이드바 토글 버튼 (Collapsed Control) 스타일링 - Dark Mode */
         [data-testid="stSidebarCollapsedControl"] {
+            position: fixed !important;
+            top: 20px !important;
+            left: 20px !important;
             background-color: #262730 !important;
             color: #ffffff !important;
             display: block !important;
             z-index: 999999 !important;
+            padding: 4px !important;
+            border-radius: 8px !important;
         }
         [data-testid="stSidebarCollapsedControl"] svg {
             fill: #ffffff !important;
@@ -128,11 +133,16 @@ else:
         /* 사이드바 토글 버튼 (Collapsed Control) 스타일링 */
         /* 사이드바 토글 버튼 (Collapsed Control) 스타일링 - Light Mode */
         [data-testid="stSidebarCollapsedControl"] {
+            position: fixed !important;
+            top: 20px !important;
+            left: 20px !important;
             background-color: #f8f9fa !important;
             border: 1px solid #e0e0e0 !important;
             color: #31333F !important;
             display: block !important;
             z-index: 999999 !important;
+            padding: 4px !important;
+            border-radius: 8px !important;
         }
         [data-testid="stSidebarCollapsedControl"] svg {
             fill: #31333F !important;
@@ -157,8 +167,11 @@ st.markdown(css, unsafe_allow_html=True)
 # 사용자가 카드 클릭 시 ?demo=true&section=... 파라미터로 재진입
 params = st.query_params
 if "demo" in params and params["demo"] == "true":
+    # 이미 선택된 종목이 '데이터를 선택해주세요'인 경우에만 기본 종목(삼성)으로 설정
     if "choice" not in st.session_state or st.session_state["choice"] == "데이터를 선택해주세요":
         st.session_state["choice"] = "Samsung (삼성전자)"
+    # 이미 다른 종목을 선택한 상태라면 그 종목 유지 (User Feedback 반영)
+
 
 @st.cache_data
 def get_stock_data(ticker, start="2025-01-01", end="2025-12-31"):
@@ -481,6 +494,17 @@ if choice == "데이터를 선택해주세요":
     <div class="hero-title">주가 차트 대시보드</div>
     <div class="hero-subtitle">데이터 기반의 스마트한 투자 분석을 시작하세요</div>
     """, unsafe_allow_html=True)
+
+    # (NEW) 메인 화면에서도 종목 선택 가능하게 추가 (User Feedback 반영)
+    st.markdown("##### 👇 분석할 종목을 바로 선택해보세요")
+    
+    # 사이드바와 연동을 위해 key='main_choice' 사용하되, 선택 시 sidebar 값을 업데이트
+    def update_sidebar_choice():
+        st.session_state["choice"] = st.session_state["main_choice"]
+
+    # '데이터를 선택해주세요' 제외한 리스트
+    stock_options = menu[1:] 
+    st.selectbox("빠른 종목 선택", stock_options, key="main_choice", index=None, placeholder="종목을 선택하면 상세 분석 화면으로 이동합니다...", on_change=update_sidebar_choice)
 
     st.divider()
 
