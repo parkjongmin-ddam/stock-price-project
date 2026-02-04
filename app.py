@@ -406,7 +406,7 @@ def plot_saltlux_report(df, name="Saltlux", template="plotly_white"):
 # ... 종목 선택 및 Date Picker 로직 ...
 
 # 종목 선택
-menu = ["데이터를 선택해주세요", "Samsung (삼성전자)", "SK Hynix (SK하이닉스)", "Kakao (카카오)", "Saltlux (솔트룩스)", "Hancom (한글과컴퓨터)", "직접 코드 입력 (Direct Input)"]
+menu = ["데이터를 선택해주세요", "Samsung (삼성전자)", "SK Hynix (SK하이닉스)", "Kakao (카카오)", "Saltlux (솔트룩스)", "Hancom (한글과컴퓨터)"]
 
 # (NEW) session_state와 연동하여 선택 상태 유지
 if "choice" not in st.session_state:
@@ -617,13 +617,7 @@ else:
         "Hancom (한글과컴퓨터)": {"code": "030520", "type": "standard", "name": "Hancom"},
     }
 
-    # 직접 입력 로직
-    if choice == "직접 코드 입력 (Direct Input)":
-        ticker_input = st.sidebar.text_input("종목 코드 입력 (예: 005930)", value="005930")
-        name_input = st.sidebar.text_input("종목명 (Display Name)", value="Custom Stock")
-        selected = {"code": ticker_input, "type": "standard", "name": name_input}
-    else:
-        selected = stock_map[choice]
+    selected = stock_map[choice]
 
     ticker = selected["code"]
     name = selected["name"]
