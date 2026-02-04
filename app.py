@@ -523,10 +523,16 @@ if choice == "데이터를 선택해주세요":
     
     # 사이드바와 연동을 위해 key='main_choice' 사용하되, 선택 시 sidebar 값을 업데이트
     def update_sidebar_choice():
+        # 메인 선택 값으로 choice 업데이트
         st.session_state["choice"] = st.session_state["main_choice"]
+        # 사이드바 위젯의 상태(sb_choice)도 동기화해야 다음 런타임에 초기화되지 않음 (중요)
+        st.session_state["sb_choice"] = st.session_state["main_choice"]
 
     # '데이터를 선택해주세요' 제외한 리스트
     stock_options = menu[1:] 
+    
+    # 여기서 selectbox를 그리면 사용자가 값을 바꿀 때 update_sidebar_choice 호출 -> session_state 업데이트 -> Rerun
+    # Rerun되면 맨 위에서 choice 값을 session_state에서 읽어옴 -> if choice != "데이터..." 분기로 이동 -> 대시보드 표시
     st.selectbox("빠른 종목 선택", stock_options, key="main_choice", index=None, placeholder="종목을 선택하면 상세 분석 화면으로 이동합니다...", on_change=update_sidebar_choice)
 
     st.divider()
@@ -577,8 +583,8 @@ if choice == "데이터를 선택해주세요":
     with col_guide:
         st.subheader("🚀 시작하는 방법")
         st.markdown("""
-        1. **좌측 사이드바**를 확인해주세요.
-        2. **'종목 선택'** 메뉴를 클릭하여 분석하고 싶은 기업을 선택하세요.
+        1. **상단의 '빠른 종목 선택'** 또는 **좌측 사이드바**를 이용하세요.
+        2. 분석하고 싶은 **기업을 선택**하면 즉시 대시보드로 이동합니다.
            - *지원 종목: 삼성전자, SK하이닉스, 카카오, 솔트룩스, 한글과컴퓨터*
         3. 날짜를 변경하여 **원하는 기간**의 데이터를 조회해보세요.
         """)
