@@ -2,4 +2,6 @@ streamlit
 finance-datareader
 plotly
 pandas
-matplotlib
+numpy
+lxml
+beautifulsoup4
