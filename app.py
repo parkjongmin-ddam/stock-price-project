@@ -36,12 +36,16 @@ if is_dark:
         
         /* 사이드바 배경 및 텍스트 (명확하게 톤업) */
         section[data-testid="stSidebar"] { background-color: #262730; }
+        section[data-testid="stSidebar"] .block-container { padding-top: 3rem !important; }
+        
         section[data-testid="stSidebar"] p, 
         section[data-testid="stSidebar"] span, 
         section[data-testid="stSidebar"] label, 
         section[data-testid="stSidebar"] div[data-testid="stMarkdownContainer"] p { 
             color: #ffffff !important; 
         }
+        /* 라디오 버튼 텍스트 강제 적용 */
+        div[data-testid="stRadio"] label { color: #ffffff !important; }
         
         /* 상단 헤더 (흰색 띠 제거) - 가장 중요 */
         header[data-testid="stHeader"] { background-color: #0e1117; }
@@ -88,6 +92,7 @@ else:
             background-color: #f8f9fa; 
             border-right: 1px solid #e0e0e0;
         }
+        section[data-testid="stSidebar"] .block-container { padding-top: 3rem !important; }
         
         /* 사이드바 내 모든 텍스트 요소 색상 강제 (시스템 테마 간섭 방지) */
         section[data-testid="stSidebar"] h1,
@@ -100,6 +105,8 @@ else:
         section[data-testid="stSidebar"] div[data-testid="stMarkdownContainer"] li { 
             color: #31333F !important; 
         }
+        /* 라디오 버튼 텍스트 강제 적용 (Light) */
+        div[data-testid="stRadio"] label { color: #31333F !important; }
 
         /* 헤더 배경 */
         header[data-testid="stHeader"] { background-color: #ffffff; }
