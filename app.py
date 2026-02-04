@@ -59,15 +59,10 @@ if is_dark:
 
         /* 사이드바 토글 버튼 (Collapsed Control) 스타일링 - Dark Mode */
         [data-testid="stSidebarCollapsedControl"] {
-            position: fixed !important;
-            top: 20px !important;
-            left: 20px !important;
             background-color: #262730 !important;
             color: #ffffff !important;
             display: block !important;
-            z-index: 999999 !important;
-            padding: 4px !important;
-            border-radius: 8px !important;
+            z-index: 100000 !important;
         }
         [data-testid="stSidebarCollapsedControl"] svg {
             fill: #ffffff !important;
@@ -133,16 +128,11 @@ else:
         /* 사이드바 토글 버튼 (Collapsed Control) 스타일링 */
         /* 사이드바 토글 버튼 (Collapsed Control) 스타일링 - Light Mode */
         [data-testid="stSidebarCollapsedControl"] {
-            position: fixed !important;
-            top: 20px !important;
-            left: 20px !important;
             background-color: #f8f9fa !important;
             border: 1px solid #e0e0e0 !important;
             color: #31333F !important;
             display: block !important;
-            z-index: 999999 !important;
-            padding: 4px !important;
-            border-radius: 8px !important;
+            z-index: 100000 !important;
         }
         [data-testid="stSidebarCollapsedControl"] svg {
             fill: #31333F !important;
@@ -410,7 +400,40 @@ menu = ["데이터를 선택해주세요", "Samsung (삼성전자)", "SK Hynix (
 if "choice" not in st.session_state:
     st.session_state["choice"] = menu[0]
 
-choice = st.sidebar.selectbox("종목 선택 (Select Stock)", menu, key="choice")
+# 사이드바에서 선택 변경 시 session_state 업데이트
+def update_choice():
+    # 사이드바에서 선택된 값을 session_state의 choice에 반영
+    # st.session_state.choice는 selectbox의 key="sb_choice"값으로 관리 추천
+    pass
+
+# Tip: selectbox에 key를 부여하면 자동으로 session_state에 저장됨
+# 하지만 여기서는 choice 변수를 직접 제어하기 위해 key를 분리하거나 로직 조정
+# 간편함을 위해 바로 st.sidebar.selectbox 사용하되 index를 활용
+
+# 현재 상태에 맞는 index 찾기
+try:
+    current_index = menu.index(st.session_state["choice"])
+except:
+    current_index = 0
+
+choice = st.sidebar.selectbox(
+    "종목 선택 (Select Stock)", 
+    menu, 
+    index=current_index,
+    key="sb_choice"
+)
+
+# 선택된 값이 변경되었으면 메인 choice 변수 업데이트
+if st.session_state["choice"] != choice:
+    st.session_state["choice"] = choice
+    st.rerun()
+
+# 🏠 홈으로 돌아가기 버튼 (사이드바)
+if choice != "데이터를 선택해주세요":
+    if st.sidebar.button("🏠 홈으로 돌아가기 (Home)", use_container_width=True):
+        st.session_state["choice"] = "데이터를 선택해주세요"
+        st.rerun()
+
 
 # 날짜 선택
 col1, col2 = st.sidebar.columns(2)
