@@ -53,10 +53,21 @@ if is_dark:
         .stMarkdown { color: #ffffff; }
 
         /* 사이드바 토글 버튼 (Collapsed Control) 스타일링 */
+        /* Metric (가격 표기) 톤업 - Dark Mode */
+        [data-testid="stMetricValue"] { color: #00e676 !important; font-weight: 700 !important; }
+        [data-testid="stMetricLabel"] { color: #e0e0e0 !important; }
+
+        /* 사이드바 토글 버튼 (Collapsed Control) 스타일링 - Dark Mode */
         [data-testid="stSidebarCollapsedControl"] {
+            background-color: #262730 !important;
+            border-radius: 5px !important;
             color: #ffffff !important;
             display: block !important;
-            z-index: 10000 !important;
+            z-index: 100000 !important;
+        }
+        [data-testid="stSidebarCollapsedControl"] svg {
+            fill: #ffffff !important;
+            stroke: #ffffff !important;
         }
 
         /* 상단 툴바/버튼/푸터 숨기기 */
@@ -116,10 +127,18 @@ else:
         div[data-testid="stExpander"] summary { color: #31333F !important; }
 
         /* 사이드바 토글 버튼 (Collapsed Control) 스타일링 */
+        /* 사이드바 토글 버튼 (Collapsed Control) 스타일링 - Light Mode */
         [data-testid="stSidebarCollapsedControl"] {
+            background-color: #f8f9fa !important;
+            border-radius: 5px !important;
+            border: 1px solid #e0e0e0 !important;
             color: #31333F !important;
             display: block !important;
-            z-index: 10000 !important;
+            z-index: 100000 !important;
+        }
+        [data-testid="stSidebarCollapsedControl"] svg {
+            fill: #31333F !important;
+            stroke: #31333F !important;
         }
 
         /* 상단 툴바/버튼/푸터 숨기기 */
