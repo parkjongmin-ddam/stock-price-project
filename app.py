@@ -60,6 +60,11 @@ if is_dark:
             background-color: #262730 !important;
             color: #ffffff !important;
         }
+
+        /* 상단 툴바 및 배포 버튼 숨기기 */
+        .stDeployButton { display: none !important; }
+        [data-testid="stToolbar"] { visibility: hidden !important; }
+        [data-testid="stHeader"] { transform: translateY(-50px); } /* 헤더 영역 축소 효과 */
     </style>
     """
 else:
@@ -97,6 +102,11 @@ else:
             color: #31333F !important;
             border: 1px solid #e0e0e0 !important;
         }
+
+        /* 상단 툴바 및 배포 버튼 숨기기 */
+        .stDeployButton { display: none !important; }
+        [data-testid="stToolbar"] { visibility: hidden !important; }
+        [data-testid="stHeader"] { transform: translateY(-50px); } /* 헤더 영역 축소 효과 */
     </style>
     """
 st.markdown(css, unsafe_allow_html=True)
