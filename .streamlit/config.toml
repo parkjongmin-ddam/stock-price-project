@@ -1,10 +1,21 @@
-[server]
-# 파일 변경 감지 시 자동으로 앱 재실행
-runOnSave = true
-
-# 파일 감시 활성화
-fileWatcherType = "auto"
-
 [client]
-# 사이드바 네비게이션 컨트롤 숨기기
-showSidebarNavigation = false
+# 사이드바 초기 상태 설정
+# "auto" - 자동 (기본값)
+# "expanded" - 항상 펼쳐진 상태
+# "collapsed" - 항상 접힌 상태
+showSidebarNavigation = true
+
+[ui]
+# 사이드바가 항상 펼쳐진 상태로 시작
+hideTopBar = false
+hideSidebarNav = false
+
+[server]
+# 서버 설정
+headless = true
+enableCORS = false
+enableXsrfProtection = true
+
+[browser]
+# 브라우저 설정
+gatherUsageStats = false
