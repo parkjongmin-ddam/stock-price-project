@@ -74,18 +74,6 @@ if is_dark:
             color: #e0e0e0 !important; 
         }
 
-        /* 사이드바 접기 버튼 완전히 숨기기 */
-        [data-testid="stSidebarCollapsedControl"] { 
-            display: none !important; 
-            visibility: hidden !important;
-            opacity: 0 !important;
-            pointer-events: none !important;
-        }
-        
-        button[kind="header"] {
-            display: none !important;
-        }
-
         /* Deploy 버튼과 Toolbar 숨기기 */
         .stDeployButton { display: none !important; }
         [data-testid="stToolbar"] { visibility: hidden !important; }
@@ -165,18 +153,6 @@ else:
         }
         [data-testid="stMetricLabel"] { 
             color: #666666 !important; 
-        }
-
-        /* 사이드바 접기 버튼 완전히 숨기기 */
-        [data-testid="stSidebarCollapsedControl"] { 
-            display: none !important; 
-            visibility: hidden !important;
-            opacity: 0 !important;
-            pointer-events: none !important;
-        }
-        
-        button[kind="header"] {
-            display: none !important;
         }
         
         /* Deploy 버튼과 Toolbar 숨기기 */
