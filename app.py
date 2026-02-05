@@ -195,13 +195,36 @@ st.markdown(css, unsafe_allow_html=True)
 # ==========================================
 # 2. 데이터 로드 및 캐싱 (Data Loading)
 # ==========================================
-@st.cache_data
+@st.cache_data(ttl=3600, show_spinner=False)  # 1시간 캐시, 스피너 비활성화
 def get_stock_data(ticker, start="2025-01-01", end="2025-12-31"):
+    """
+    주식 데이터를 FinanceDataReader로 가져옵니다.
+    """
     try:
-        df = fdr.DataReader(ticker, start, end)
+        # 한국 주식 코드에 .KS 추가 (필요시)
+        if len(ticker) == 6 and ticker.isdigit():
+            ticker_code = ticker
+        else:
+            ticker_code = ticker
+            
+        df = fdr.DataReader(ticker_code, start, end)
+        
+        # 데이터 검증
+        if df is None or df.empty:
+            st.warning(f"⚠️ {ticker} 데이터가 비어있습니다. 날짜 범위를 확인해주세요.")
+            return pd.DataFrame()
+            
+        # 필수 컬럼 확인
+        required_columns = ['Open', 'High', 'Low', 'Close', 'Volume']
+        if not all(col in df.columns for col in required_columns):
+            st.error(f"❌ 필수 데이터 컬럼이 누락되었습니다: {ticker}")
+            return pd.DataFrame()
+            
         return df
+        
     except Exception as e:
-        st.error(f"데이터 수집 중 오류 발생: {e}")
+        st.error(f"❌ 데이터 수집 중 오류 발생 ({ticker}): {str(e)}")
+        st.info("💡 Tip: 날짜 범위를 조정하거나 잠시 후 다시 시도해주세요.")
         return pd.DataFrame()
 
 # ==========================================
