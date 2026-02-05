@@ -18,3 +18,7 @@ Thumbs.db
 
 # Backup
 backup/
+
+# Individual stock analysis scripts
+mind.py
+saltlux.py
